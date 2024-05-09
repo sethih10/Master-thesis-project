@@ -59,30 +59,6 @@ def add_whitegaussian_noise(d, sc=0.5):
     return d + (n * sc), n
 
 
-def add_bandlimited_noise(d, lc=2, hc=80, sc=0.5):
-    """ Add bandlimited noise to data patch
-    
-    Parameters
-    ----------
-    d: np.array [y,x]
-        Data to add noise to
-    lc: float 
-        Low cut for bandpass
-    hc: float 
-        High cut for bandpass
-    sc: float 
-        Noise scaling value
-        
-    Returns
-    -------
-        d+n: np.array 
-            Created noisy data
-        n: np.array 
-            Additive noise        
-    """
-    n = band_limited_noise(size=d.shape, lowcut=lc, highcut=hc)
-
-    return d + (n * sc), n
 
 
 def add_trace_wise_noise(d,
@@ -126,115 +102,9 @@ def add_trace_wise_noise(d,
     return alldata
 
 
-def butter_bandpass(lowcut, highcut, fs, order=5):
-    """ Bandpass filter
-    
-    Parameters
-    ----------
-    lowcut: int
-        Low cut for bandpass
-    highcut: int 
-        High cut for bandpass
-    fs: int 
-        Sampling frequency
-    order: int 
-        Filter order
-        
-    Returns
-    -------
-        b : np.array 
-            The numerator coefficient vector of the filter
-        a : np.array 
-            The denominator coefficient vector of the filter
-    """
-    nyq = 0.5 * fs
-    low = lowcut / nyq
-    high = highcut / nyq
-    b, a = butter(order, [low, high], btype='band')
-    return b, a
 
 
-def butter_bandpass_filter(data, lowcut, highcut, fs, order=5):
-    """ Apply bandpass filter to trace
-    
-    Parameters
-    ----------
-    data: np.array [1D]
-        Data onto which to apply bp filter
-    lowcut: int
-        Low cut for bandpass
-    highcut: int 
-        High cut for bandpass
-    fs: int 
-        Sampling frequency
-    order: int 
-        Filter order
-        
-    Returns
-    -------
-        y : np.array 
-            Bandpassed data
-    """
-    
-    b, a = butter_bandpass(lowcut, highcut, fs, order=order)
-    y = filtfilt(b, a, data)
-    return y
 
-
-def array_bp(data, lowcut, highcut, fs, order=5):
-    """ Apply bandpass filter to array of traces
-    
-    Parameters
-    ----------
-    data: np.array [2D]
-        Data onto which to apply bp filter
-    lowcut: int
-        Low cut for bandpass
-    highcut: int 
-        High cut for bandpass
-    fs: int 
-        Sampling frequency
-    order: int 
-        Filter order
-        
-    Returns
-    -------
-        bp : np.array [2D]
-            Bandpassed data
-    """
-    bp = np.vstack([butter_bandpass_filter(data[:, ix], lowcut, highcut, fs, order)
-                    for ix in range(data.shape[1])])
-
-    return bp
-
-
-def band_limited_noise(size, lowcut, highcut, fs=250):
-    """ Generate bandlimited noise
-    
-    Parameters
-    ----------
-    size: tuple 
-        Size of array on which to create the noise
-    lowcut: int
-        Low cut for bandpass
-    highcut: int 
-        High cut for bandpass
-    fs: int 
-        Sampling frequency
-        
-    Returns
-    -------
-        bpnoise : np.array 
-            Bandpassed noise
-    """
-
-    basenoise = np.random.normal(size=size)
-    # Pad top and bottom due to filter effects
-    basenoise_pad = np.vstack([np.zeros([50, size[1]]), basenoise, np.zeros([50, size[1]])])
-    # Bandpass base noise
-    bpnoise =  array_bp(basenoise_pad, lowcut, highcut, fs, order=5)[:,50:-50]
-
-    return bpnoise.T
 
 def set_seed(seed):
     """
