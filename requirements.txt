@@ -1,0 +1,7 @@
+n2v
+matplotlib
+scikit-learn
+Pillow
+tqdm
+wandb
+ultralytics==8.2.54

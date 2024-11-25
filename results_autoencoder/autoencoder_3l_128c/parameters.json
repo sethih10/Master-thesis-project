@@ -1,0 +1,1 @@
+{"layers": 3, "channels": 128, "learning rate": 0.0001, "epoch": 150, "loss": "mse", "test size": 0.2}

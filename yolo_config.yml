@@ -1,0 +1,5 @@
+names:
+  '0': 'dark_islands'
+path: /kaggle/working/yolo
+train: images/train
+val: images/val
