@@ -1,7 +1,7 @@
 # Master Thesis Project -  Harshit Sethi
 
 
-<img src="Images/image.png" alt="Description" width="1200" height="1000">
+<img src="Images/image.png" alt="Description">
 
 
 
